@@ -22,8 +22,12 @@ export const TitleText = ({
     ltr = false,
     titleWidget = null,
     textWidget = null,
+    titleCss = '',
+    textCss = '',
+    boxCss = '',
 }) => {
     const _title = Widget.Label({
+        css: titleCss,
         label: title,
         className: titleClass,
         xalign: titleXalign,
@@ -33,6 +37,7 @@ export const TitleText = ({
     });
 
     const _text = Widget.Label({
+        css: textCss,
         label: text,
         className: textClass,
         xalign: textXalign,
@@ -46,6 +51,7 @@ export const TitleText = ({
         : [titleWidget ? titleWidget : _title, textWidget ? textWidget : _text];
 
     return Widget.Box({
+        css: boxCss,
         className: boxClass,
         vertical: vertical,
         homogeneous: homogeneous,
@@ -60,8 +66,10 @@ export const TitleTextRevealer = ({
     text,
     textClass = '',
     boxClass = '',
+    buttonCss = '',
     buttonClass = '',
     revealerClass = '',
+    transitionDuration = 300,
     homogeneous = false,
     titleXalign = 0.5,
     textXalign = 0.5,
@@ -92,7 +100,7 @@ export const TitleTextRevealer = ({
     const revealedText = Widget.Revealer({
         revealChild: false,
         className: revealerClass,
-        transitionDuration: 500,
+        transitionDuration: transitionDuration,
         transition: vertical
             ? 'slide_down'
             : vertical
@@ -110,11 +118,80 @@ export const TitleTextRevealer = ({
     });
 
     return Widget.Button({
+        css: buttonCss,
         child: box,
         className: buttonClass,
         onHover: onHover,
         onHoverLost: onHoverLost,
         onClicked: onClicked,
+    });
+};
+
+export const TitleTextRevealer2 = ({
+    title,
+    titleClass = '',
+    text,
+    textClass = '',
+    boxClass = '',
+    buttonClass = '',
+    revealerClass = '',
+    homogeneous = false,
+    titleXalign = 0.5,
+    textXalign = 0.5,
+    titleTruncate = 'none',
+    textTruncate = 'none',
+    vertical = true,
+    spacing = 0,
+    onHover = (btn) => (btn.get_parent().children[1].reveal_child = true),
+    onHoverLost = (btn) => (btn.get_parent().children[1].reveal_child = false),
+    onClicked = null,
+    titleWidget = null,
+    textWidget = null,
+    boxCss = '',
+}) => {
+    const _title = Widget.Label({
+        label: title,
+        className: titleClass,
+        xalign: titleXalign,
+        truncate: titleTruncate,
+    });
+
+    const _text = Widget.Label({
+        label: text,
+        className: textClass,
+        xalign: textXalign,
+        truncate: textTruncate,
+    });
+
+    const revealedText = Widget.Revealer({
+        revealChild: false,
+        className: revealerClass,
+        transitionDuration: 500,
+        transition: vertical
+            ? 'slide_down'
+            : vertical
+              ? 'slide_left'
+              : 'slide_right',
+        child: textWidget ? textWidget : _text,
+    });
+
+    return Widget.Box({
+        css: boxCss,
+        vertical: vertical,
+        homogeneous: homogeneous,
+        spacing: spacing,
+        vertical: vertical,
+        className: boxClass,
+        children: [
+            Widget.Button({
+                child: titleWidget ? titleWidget : _title,
+                className: buttonClass,
+                onHover: onHover,
+                onHoverLost: onHoverLost,
+                onClicked: onClicked,
+            }),
+            revealedText,
+        ],
     });
 };
 
